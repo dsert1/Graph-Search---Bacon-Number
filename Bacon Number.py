@@ -102,39 +102,7 @@ def bacon_path(data, actor_id):
     '''
     Creates a path from Bacon to input Actor.
     '''
-    #intitialize agenda(list) actor_web (actor: set of neighbor actors), actor_parents (child: parent)
-    visited = set()
-    agenda = [4724]
-    actor_web = create_actor_dictionary(data)
-    actor_parents = {}
-
-
-
-    while agenda: #keep looping while agenda has items in it
-        current_node = agenda.pop(0)
-        visited.add(current_node)
-        if current_node == actor_id: #checks if the next node is the destination node
-            break
-        else:
-            for neighbor_node in actor_web[current_node]: #checking neighbors of current node
-                if neighbor_node not in visited:
-                    agenda.append(neighbor_node) #add to agenda
-                    actor_parents.setdefault(neighbor_node, current_node) #if the dictionary key does not exist, map it to current node. do not touch if there is already a key
-                    visited.add(current_node) #adds both the current and its child nodes to visited set
-                    visited.add(neighbor_node)
-
-    #check for no path
-    if actor_id not in actor_parents:
-        return None
-
-    #generates path starting with destination node
-    value = actor_id
-    path = [actor_id]
-    while value != 4724: #appends nodes to path until reaching Bacon
-        path.append(actor_parents[value])
-        value = actor_parents[value]
-    path.reverse() #return a list that starts with Bacon
-    return path
+    return actor_to_actor_path(data, 4724, actor_id)
 
 def create_actor_dictionary(data):
     '''
@@ -160,41 +128,12 @@ def create_movie_dictionary(data):
 
 def actor_to_actor_path(data, actor_id_1, actor_id_2):
     '''
-        Creates a path from Bacon to input Actor.
-        '''
-    # intitialize agenda(list) actor_web (actor: set of neighbor actors), actor_parents (child: parent)
-    visited = set()
-    agenda = [actor_id_1]
-    actor_parents = {}
-    actor_web = create_actor_dictionary(data)
+    Creates a path from Bacon to input Actor.
+    '''
+    def is_actor(a2):
+        return actor_id_2 == a2
 
-
-    while agenda:  # keep looping while agenda has items in it
-        current_node = agenda.pop(0)
-        visited.add(current_node)
-        if current_node == actor_id_2:  # checks if the next node is the destination node
-            break
-        else:
-            for neighbor_node in actor_web[current_node]:  # checking neighbors of current node
-                if neighbor_node not in visited:
-                    agenda.append(neighbor_node)  # add to agenda
-                    actor_parents.setdefault(neighbor_node,
-                                             current_node)  # if the dictionary key does not exist, map it to current node. do not touch if there is already a key
-                    visited.add(current_node)  # adds both the current and its child nodes to visited set
-                    visited.add(neighbor_node)
-
-    # check for no path
-    if actor_id_2 not in actor_parents:
-        return None
-
-    # generates path starting with destination node
-    value = actor_id_2
-    path = [actor_id_2]
-    while value != actor_id_1:  # appends nodes to path until reaching Bacon
-        path.append(actor_parents[value])
-        value = actor_parents[value]
-    path.reverse()  # return a list that starts with Bacon
-    return path
+    return actor_path(data, actor_id_1, is_actor)
 
 def movie_path(data, actor_id_1, actor_id_2):
     '''
